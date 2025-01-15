@@ -1,0 +1,41 @@
+services:
+  api:
+    container_name: blog-api
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - MONGODB_URI=mongodb://mongodb:27017/blog
+      - NODE_ENV=development
+    volumes:
+      - ./api:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - mongodb
+    networks:
+      - blog-network
+    restart: unless-stopped
+
+  mongodb:
+    container_name: blog-mongodb
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+      - ./mongo-init:/docker-entrypoint-initdb.d
+    environment:
+      - MONGO_INITDB_DATABASE=blog
+    networks:
+      - blog-network
+    restart: unless-stopped
+
+networks:
+  blog-network:
+    driver: bridge
+
+volumes:
+  mongodb_data:
+    driver: local
