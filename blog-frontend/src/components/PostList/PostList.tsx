@@ -1,4 +1,3 @@
-// src/components/PostList/PostList.tsx
 import React from 'react';
 import { Post } from '../../types';
 import { SafeHTML } from '../SafeHTML/SafeHTML';
@@ -8,9 +7,21 @@ interface PostListProps {
   posts: Post[];
   onEdit: (post: Post) => void;
   onDelete: (id: string) => void;
+  onPostClick: (post: Post) => void;
 }
 
-export const PostList: React.FC<PostListProps> = ({ posts, onEdit, onDelete }) => {
+// Função auxiliar para truncar texto
+const truncateText = (text: string, maxLength: number = 200) => {
+  if (text.length <= maxLength) return text;
+  return text.slice(0, maxLength) + '...';
+};
+
+export const PostList: React.FC<PostListProps> = ({ 
+  posts, 
+  onEdit, 
+  onDelete,
+  onPostClick 
+}) => {
   if (!Array.isArray(posts)) {
     return <div className={styles.error}>Nenhum post disponível</div>;
   }
@@ -20,7 +31,13 @@ export const PostList: React.FC<PostListProps> = ({ posts, onEdit, onDelete }) =
       {posts.map(post => (
         <article key={post._id} className={styles.post}>
           <header className={styles.header}>
-            <h2 className={styles.title}>{post.title}</h2>
+            <h2 
+              className={styles.title} 
+              onClick={() => onPostClick(post)}
+              style={{ cursor: 'pointer' }}
+            >
+              {post.title}
+            </h2>
             <div className={styles.actions}>
               <button
                 onClick={() => onEdit(post)}
@@ -36,9 +53,8 @@ export const PostList: React.FC<PostListProps> = ({ posts, onEdit, onDelete }) =
               </button>
             </div>
           </header>
-          {/* Substituímos o parágrafo simples pelo componente SafeHTML */}
           <SafeHTML 
-            content={post.content} 
+            content={truncateText(post.content)} 
             className={styles.content}
           />
           <footer className={styles.footer}>
@@ -50,3 +66,4 @@ export const PostList: React.FC<PostListProps> = ({ posts, onEdit, onDelete }) =
     </div>
   );
 };
+
