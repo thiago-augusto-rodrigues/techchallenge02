@@ -2,6 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const connectDB = require('./config/database');
 const postRoutes = require('./routes/posts');
+const userRoutes = require('./routes/users');
+const seedRoutes = require('./routes/seed');
 const logger = require('./config/logger');
 
 const app = express();
@@ -16,6 +18,8 @@ connectDB();
 
 // Rotas
 app.use('/api/posts', postRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/seed', seedRoutes);
 
 // Rota de verificação de saúde
 app.get('/health', (req, res) => {

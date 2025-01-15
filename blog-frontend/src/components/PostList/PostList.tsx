@@ -22,10 +22,6 @@ export const PostList: React.FC<PostListProps> = ({
   onDelete,
   onPostClick 
 }) => {
-  if (!Array.isArray(posts)) {
-    return <div className={styles.error}>Nenhum post disponível</div>;
-  }
-
   return (
     <div className={styles.list}>
       {posts.map(post => (
@@ -34,7 +30,6 @@ export const PostList: React.FC<PostListProps> = ({
             <h2 
               className={styles.title} 
               onClick={() => onPostClick(post)}
-              style={{ cursor: 'pointer' }}
             >
               {post.title}
             </h2>
@@ -58,7 +53,10 @@ export const PostList: React.FC<PostListProps> = ({
             className={styles.content}
           />
           <footer className={styles.footer}>
-            <span>Por {post.author}</span>
+            <div className={styles.authorInfo}>
+              <span className={styles.authorName}>Por {post.author.name}</span>
+              <span className={styles.discipline}>{post.author.discipline}</span>
+            </div>
             <time>{new Date(post.createdAt).toLocaleDateString()}</time>
           </footer>
         </article>
@@ -66,4 +64,5 @@ export const PostList: React.FC<PostListProps> = ({
     </div>
   );
 };
+
 
