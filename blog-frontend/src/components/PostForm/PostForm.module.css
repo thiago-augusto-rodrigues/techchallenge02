@@ -52,3 +52,18 @@
   .secondary:hover {
     background-color: #d1d5db;
   }
+  
+  .select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    background-color: white;
+  }
+  
+  .error {
+    color: #dc2626;
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+  }

@@ -1,45 +1,39 @@
-const Post = require("../models/Post");
-const logger = require("../config/logger");
+const Post = require('../models/Post');
+const logger = require('../config/logger');
 
-// Funções auxiliares
-const formatErrorResponse = (error) => {
-  return {
-    message: error.message || "Erro interno do servidor",
-    details: process.env.NODE_ENV === "development" ? error.stack : undefined,
-  };
-};
-
-// Controller com todos os métodos relacionados a posts
 const postController = {
-  // Lista todos os posts com paginação opcional
+  // Listar posts com informações do autor
   async listPosts(req, res) {
     try {
       const { page = 1, limit = 10 } = req.query;
       const options = {
         page: parseInt(page),
         limit: parseInt(limit),
-        sort: { createdAt: -1 },
+        sort: { createdAt: -1 }
       };
 
       const posts = await Post.find()
+        .populate('author', 'name email discipline')
         .skip((options.page - 1) * options.limit)
         .limit(options.limit)
         .sort(options.sort);
 
       const total = await Post.countDocuments();
 
-      logger.info(`Listados ${posts.length} posts de ${total} total`);
+      logger.info(`Listados ${posts.length} posts`);
       res.json({
         posts,
         currentPage: options.page,
         totalPages: Math.ceil(total / options.limit),
-        totalPosts: total,
+        totalPosts: total
       });
     } catch (error) {
-      logger.error("Erro ao listar posts:", error);
-      res.status(500).json(formatErrorResponse(error));
+      logger.error('Erro ao listar posts:', error);
+      res.status(500).json({ message: error.message });
     }
   },
+
+
 
   // Busca post por ID
   async getPostById(req, res) {

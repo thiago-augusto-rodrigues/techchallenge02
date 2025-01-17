@@ -14,11 +14,9 @@ const postSchema = new mongoose.Schema({
     minlength: [10, 'Conteúdo deve ter no mínimo 10 caracteres']
   },
   author: {
-    type: String,
-    required: [true, 'Autor é obrigatório'],
-    trim: true,
-    minlength: [2, 'Nome do autor deve ter no mínimo 2 caracteres'],
-    maxlength: [50, 'Nome do autor deve ter no máximo 50 caracteres']
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: [true, 'Autor é obrigatório']
   },
   createdAt: {
     type: Date,
@@ -30,8 +28,7 @@ const postSchema = new mongoose.Schema({
   }
 });
 
-// Índices para melhorar performance das buscas
 postSchema.index({ title: 'text', content: 'text' });
-postSchema.index({ createdAt: -1 });
 
 module.exports = mongoose.model('Post', postSchema);
+
