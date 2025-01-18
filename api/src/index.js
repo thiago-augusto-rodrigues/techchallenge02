@@ -1,10 +1,13 @@
 const express = require('express');
 const cors = require('cors');
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocs = require('./config/swagger.config');
 const connectDB = require('./config/database');
 const postRoutes = require('./routes/posts');
 const userRoutes = require('./routes/users');
 const seedRoutes = require('./routes/seed');
 const logger = require('./config/logger');
+//const swaggerSpec = require('./config/swagger');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -15,6 +18,9 @@ app.use(express.json());
 
 // Conectar ao banco de dados
 connectDB();
+
+// Rota para documentação Swagger
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 // Rotas
 app.use('/api/posts', postRoutes);
@@ -29,3 +35,9 @@ app.get('/health', (req, res) => {
 app.listen(PORT, () => {
   logger.info(`Servidor rodando na porta ${PORT}`);
 });
+
+// Rota para acessar a especificação em JSON
+// app.get('/api-docs.json', (req, res) => {
+//   res.setHeader('Content-Type', 'application/json');
+//   res.send(swaggerSpec);
+// });

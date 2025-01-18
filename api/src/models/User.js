@@ -1,5 +1,45 @@
 const mongoose = require('mongoose');
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     User:
+ *       type: object
+ *       required:
+ *         - name
+ *         - email
+ *         - password
+ *         - discipline
+ *       properties:
+ *         _id:
+ *           type: string
+ *           description: ID auto-gerado do usuário
+ *         name:
+ *           type: string
+ *           description: Nome completo do usuário
+ *         email:
+ *           type: string
+ *           format: email
+ *           description: Email do usuário
+ *         discipline:
+ *           type: string
+ *           description: Disciplina lecionada pelo professor
+ *         role:
+ *           type: string
+ *           enum: [professor, admin]
+ *           description: Função do usuário no sistema
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *           description: Data de criação do usuário
+ *       example:
+ *         name: Maria Silva
+ *         email: maria@escola.edu
+ *         discipline: Matemática
+ *         role: professor
+ */
+
 const userSchema = new mongoose.Schema({
   name: {
     type: String,

@@ -1,5 +1,40 @@
 const mongoose = require('mongoose');
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Post:
+ *       type: object
+ *       required:
+ *         - title
+ *         - content
+ *         - author
+ *       properties:
+ *         _id:
+ *           type: string
+ *           description: ID auto-gerado do post
+ *         title:
+ *           type: string
+ *           description: Título do post
+ *         content:
+ *           type: string
+ *           description: Conteúdo do post
+ *         author:
+ *           type: string
+ *           description: ID do autor (professor)
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *         updatedAt:
+ *           type: string
+ *           format: date-time
+ *       example:
+ *         title: Introdução à Álgebra
+ *         content: Nesta aula vamos aprender...
+ *         author: 60d6ec9f1346f3b5e4c8c1d8
+ */
+
 const postSchema = new mongoose.Schema({
   title: {
     type: String,
