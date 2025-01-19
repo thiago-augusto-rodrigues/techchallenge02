@@ -3,8 +3,11 @@ FROM node:18-alpine
 # Criar diretório da aplicação
 WORKDIR /usr/src/app
 
+ARG MONG_URI
+
 # Copiar arquivos de dependências
 COPY . .
+
 
 # Remove dependencias para reinstalar
 RUN rm -rf node_modules
