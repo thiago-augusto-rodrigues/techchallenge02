@@ -32,6 +32,16 @@ app.get('/health', (req, res) => {
   res.json({ status: 'OK', timestamp: new Date() });
 });
 
+// Redirecionar rota raiz para documentação
+app.get('/', (req, res) => {
+  res.redirect('/api-docs');
+});
+
+// Redirecionar rotas não encontradas para documentação
+app.use('*', (req, res) => {
+  res.redirect('/api-docs');
+});
+
 app.listen(PORT, () => {
   logger.info(`Servidor rodando na porta ${PORT}`);
 });

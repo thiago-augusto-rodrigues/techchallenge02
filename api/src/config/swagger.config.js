@@ -10,7 +10,7 @@ const options = {
       description: 'API para gerenciamento de conteúdo educacional',
       contact: {
         name: 'Suporte',
-        email: 'suporte@grupoFIAP.com'
+        email: 'joandeitos@outlook.com'
       },
     },
     servers: [
@@ -20,13 +20,67 @@ const options = {
       }
     ],
     components: {
-      securitySchemes: {
-        bearerAuth: {
-          type: 'http',
-          scheme: 'bearer',
-          bearerFormat: 'JWT'
+      schemas: {
+        Post: {
+          type: 'object',
+          required: ['title', 'content', 'author'],
+          properties: {
+            _id: {
+              type: 'string',
+              description: 'ID do post'
+            },
+            title: {
+              type: 'string',
+              description: 'Título do post'
+            },
+            content: {
+              type: 'string',
+              description: 'Conteúdo do post'
+            },
+            author: {
+              type: 'string',
+              description: 'ID do autor'
+            },
+            createdAt: {
+              type: 'string',
+              format: 'date-time',
+              description: 'Data de criação'
+            },
+            updatedAt: {
+              type: 'string',
+              format: 'date-time',
+              description: 'Data de atualização'
+            }
+          }
+        },
+        PostResponse: {
+          type: 'object',
+          properties: {
+            posts: {
+              type: 'array',
+              items: {
+                $ref: '#/components/schemas/Post'
+              }
+            },
+            currentPage: {
+              type: 'integer'
+            },
+            totalPages: {
+              type: 'integer'
+            },
+            totalPosts: {
+              type: 'integer'
+            }
+          }
         }
       }
+      // securitySchemes: {
+      //   bearerAuth: {
+      //     type: 'http',
+      //     scheme: 'bearer',
+      //     bearerFormat: 'JWT'
+      //   }
+      // }
     }
   },
   apis: ['./src/routes/*.js']
