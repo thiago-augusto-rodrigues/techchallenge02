@@ -139,16 +139,17 @@ const postController = {
         });
       }
 
+      console.log(q);
+
       // Criando regex case-insensitive para a busca
       const searchRegex = new RegExp(q, "i");
 
       const posts = await Post.find({
         $or: [
           { title: searchRegex },
-          { content: searchRegex },
-          { author: searchRegex },
-        ],
-      }).sort({ createdAt: -1 });
+          { content: searchRegex }
+        ]
+      }).populate('author').sort({ createdAt: -1 });
 
       logger.info(`Busca por "${q}" retornou ${posts.length} resultados`);
       res.json(posts);
