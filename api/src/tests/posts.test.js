@@ -9,10 +9,17 @@ describe('Post Endpoints', () => {
   let mongoServer;
   let testUser;
 
-  beforeAll(async () => {
-    mongoServer = await MongoMemoryServer.create();
-    await mongoose.connect(mongoServer.getUri());
+beforeAll(async () => {
+  console.log('Iniciando o MongoMemoryServer...');
+  mongoServer = await MongoMemoryServer.create();
+  console.log('MongoMemoryServer iniciado:', mongoServer);
+  await mongoose.connect(mongoServer.getUri(), {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
   });
+  console.log('Conectado ao MongoDB');
+});
+
 
   afterAll(async () => {
     await mongoose.disconnect();
