@@ -21,10 +21,15 @@ beforeAll(async () => {
 });
 
 
-  afterAll(async () => {
-    await mongoose.disconnect();
-    await mongoServer.stop();
-  });
+afterAll(async () => {
+  console.log('Desconectando do MongoDB...');
+  await mongoose.disconnect();
+  console.log('Desconectado do MongoDB');
+  console.log('Parando o MongoMemoryServer...');
+  await mongoServer.stop();
+  console.log('MongoMemoryServer parado');
+}, 15000); // Timeout de 15 segundos para finalizar o afterAll
+
 
   beforeEach(async () => {
     await Post.deleteMany({});
