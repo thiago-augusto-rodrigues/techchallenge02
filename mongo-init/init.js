@@ -1,12 +1,14 @@
+require('dotenv').config();
+
 db.createUser({
-    user: 'bloguser',
-    pwd: 'blogpass',
-    roles: [
-      {
-        role: 'readWrite',
-        db: 'blog'
-      }
-    ]
-  });
-  
-  db.createCollection('posts');
+  user: process.env.DB_USER,
+  pwd: process.env.DB_PASSWORD,
+  roles: [
+    {
+      role: 'readWrite',
+      db: process.env.DB_NAME
+    }
+  ]
+});
+
+db.createCollection('posts');
