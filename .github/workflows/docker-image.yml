@@ -56,3 +56,5 @@ jobs:
     - name: Realizar deploy (opcional)
       run: |
         echo "Deploying..."
+    env:
+      MONGODB_URI: ${{ secrets.MONGODB_URI }}  # Usando a secret do GitHub aqui
