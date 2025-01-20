@@ -61,7 +61,7 @@ jobs:
         unzip /tmp/ngrok.zip -d /tmp
         sudo mv /tmp/ngrok /usr/local/bin
 
-    # Expor Swagger via ngrok após o deploy
+    # Expor Swagger via ngrok sem autenticação
     - name: Expor Swagger via ngrok
       run: |
         # Subir os containers e aguardar o servidor iniciar
@@ -75,11 +75,15 @@ jobs:
         # Iniciar o ngrok para expor a aplicação na porta 3000
         echo "Iniciando ngrok para expor Swagger..."
         ngrok http 3000 --log=stdout &
+        
+        # Aguardar alguns segundos para garantir que o ngrok tenha iniciado
+        echo "Aguardando ngrok iniciar..."
         sleep 10  # Espera o ngrok inicializar
         
         # Captura o link do Swagger gerado pelo ngrok
         NGROK_URL=$(curl -s http://localhost:4040/api/tunnels | jq -r '.tunnels[0].public_url')
         
+        # Exibe a URL do Swagger
         echo "Swagger está disponível em: $NGROK_URL/api-docs#/"
 
     # Realizar deploy
