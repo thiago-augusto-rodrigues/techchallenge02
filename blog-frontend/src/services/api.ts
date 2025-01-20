@@ -1,6 +1,6 @@
 import { ApiResponse } from '../types';
 
-export const API_BASE_URL = 'http://localhost:3000/api';
+export const API_BASE_URL = 'http://localhost:3100/api';
 
 export async function fetchWithError<T>(
   url: string,
