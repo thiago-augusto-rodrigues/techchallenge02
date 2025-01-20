@@ -52,10 +52,13 @@ jobs:
         docker-compose -f docker-compose.yml exec api npm test
         docker-compose -f docker-compose.yml down
 
-    # Instalar o ngrok
+    # Instalar ngrok corretamente
     - name: Instalar ngrok
       run: |
-        curl -s https://ngrok.com/download | tar xz -C /tmp
+        # Baixar o arquivo ZIP do ngrok para Linux
+        curl -s https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip -o /tmp/ngrok.zip
+        sudo apt-get install -y unzip  # Instala o unzip caso não esteja presente
+        unzip /tmp/ngrok.zip -d /tmp
         sudo mv /tmp/ngrok /usr/local/bin
 
     # Expor Swagger via ngrok após o deploy
