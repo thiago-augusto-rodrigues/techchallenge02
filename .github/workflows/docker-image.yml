@@ -34,7 +34,7 @@ jobs:
         cd api  # Entrar no diretório 'api' se o package.json está lá
         npm install
 
-    # Instalar dependências do frontend (se necessário)
+    # Instalar dependências do frontend
     - name: Instalar dependências do frontend
       run: |
         cd blog-frontend  # Entrar no diretório 'blog-frontend' se necessário
@@ -66,30 +66,37 @@ jobs:
       run: |
         ngrok authtoken ${{ secrets.NGROK_AUTH_TOKEN }}
 
-    # Expor Swagger via ngrok
-    - name: Expor Swagger via ngrok
+    # Expor Swagger e Frontend via ngrok
+    - name: Expor Swagger e Frontend via ngrok
       run: |
         # Subir os containers e aguardar o servidor iniciar
         docker-compose -f docker-compose.yml up -d
-        echo "Aguardando servidor iniciar..."
+        echo "Aguardando servidores iniciarem..."
         until curl --silent --fail localhost:3000; do
-          echo "Esperando o servidor iniciar..."
+          echo "Esperando o servidor de Swagger iniciar..."
+          sleep 5
+        done
+        until curl --silent --fail localhost:3100; do
+          echo "Esperando o servidor de frontend iniciar..."
           sleep 5
         done
         
-        # Iniciar o ngrok para expor a aplicação na porta 3000
-        echo "Iniciando ngrok para expor Swagger..."
+        # Iniciar o ngrok para expor o Swagger na porta 3000 e o frontend na porta 3100
+        echo "Iniciando ngrok para expor Swagger e Frontend..."
         ngrok http 3000 --log=stdout &
+        ngrok http 3100 --log=stdout &
         
         # Aguardar alguns segundos para garantir que o ngrok tenha iniciado
         echo "Aguardando ngrok iniciar..."
         sleep 10  # Espera o ngrok inicializar
         
-        # Captura o link do Swagger gerado pelo ngrok
-        NGROK_URL=$(curl -s http://localhost:4040/api/tunnels | jq -r '.tunnels[0].public_url')
+        # Captura os links públicos do Swagger e do Frontend gerados pelo ngrok
+        SWAGGER_URL=$(curl -s http://localhost:4040/api/tunnels | jq -r '.tunnels[0].public_url')
+        FRONTEND_URL=$(curl -s http://localhost:4040/api/tunnels | jq -r '.tunnels[1].public_url')
         
-        # Exibe a URL do Swagger
-        echo "Swagger está disponível em: $NGROK_URL/api-docs#/"
+        # Exibe as URLs públicas
+        echo "Swagger está disponível em: $SWAGGER_URL/api-docs#/"
+        echo "Frontend está disponível em: $FRONTEND_URL/api"
 
     # Realizar deploy
     - name: Realizar deploy
