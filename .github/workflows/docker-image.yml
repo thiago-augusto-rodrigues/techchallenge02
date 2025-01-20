@@ -52,9 +52,37 @@ jobs:
         docker-compose -f docker-compose.yml exec api npm test
         docker-compose -f docker-compose.yml down
 
-    # Realizar deploy (opcional)
-    - name: Realizar deploy (opcional)
+    # Instalar o ngrok
+    - name: Instalar ngrok
+      run: |
+        curl -s https://ngrok.com/download | tar xz -C /tmp
+        sudo mv /tmp/ngrok /usr/local/bin
+
+    # Expor Swagger via ngrok após o deploy
+    - name: Expor Swagger via ngrok
+      run: |
+        # Subir os containers e aguardar o servidor iniciar
+        docker-compose -f docker-compose.yml up -d
+        echo "Aguardando servidor iniciar..."
+        until curl --silent --fail localhost:3000; do
+          echo "Esperando o servidor iniciar..."
+          sleep 5
+        done
+        
+        # Iniciar o ngrok para expor a aplicação na porta 3000
+        echo "Iniciando ngrok para expor Swagger..."
+        ngrok http 3000 --log=stdout &
+        sleep 10  # Espera o ngrok inicializar
+        
+        # Captura o link do Swagger gerado pelo ngrok
+        NGROK_URL=$(curl -s http://localhost:4040/api/tunnels | jq -r '.tunnels[0].public_url')
+        
+        echo "Swagger está disponível em: $NGROK_URL/api-docs#/"
+
+    # Realizar deploy
+    - name: Realizar deploy
       run: |
         echo "Deploying..."
+        # Adicione o código de deploy para o servidor, por exemplo, via SSH ou Docker
     env:
-      MONGODB_URI: ${{ secrets.MONGODB_URI }}  # Usando a secret do GitHub aqui
+      MONGODB_URI: ${{ secrets.MONGODB_URI }}  # Usando a secret do GitHub para a URL do MongoDB
